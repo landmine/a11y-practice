@@ -2,9 +2,16 @@ name: Accessibility Scanner
 
 on:
   workflow_dispatch:
+  workflow_run:
+    workflows: [pages-build-deployment]
+    types: [completed]
+    branches: [master]
 
 jobs:
   accessibility_scanner:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     steps:
       - uses: github/accessibility-scanner@v3
